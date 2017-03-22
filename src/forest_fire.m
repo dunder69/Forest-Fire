@@ -6,12 +6,13 @@ function forest_fire(f,p,N,M)
 
 timeStepCap = 50;
 
+% Set default parameters if not provided
 if nargin<4;
-    M=200;
+    M=20;
 end
 
 if nargin<3;
-    N=200;
+    N=20;
 end
 
 if nargin<2;
@@ -19,21 +20,74 @@ if nargin<2;
 end
 
 if nargin<1;
-    f=p*.0001;
+    f=0.01;
 end
 
-% initialize;
+% initialize space with trees based on p;
 F = (rand(M,N) < p)+1;  % tree with probability p
-S = ones(3); S(2,2)=0;  % surrounding
 
-textmap = ' T#';
 colormap([.5,.5,.5;0,1,0;1,0,0]);
 
+% 1 = Barren, Tree will only grow on barren spot
+% 2 = Tree 
+% 3 = Burning
+
 for i=0:timeStepCap
-    image(F); pause(.1)    % uncomment for graphical output
-    % disp(textmap(F));	pause;		  % uncomment for textual output
-    G = ((F==1).*((rand(M,N)<p)+1));  % grow tree
-    G = G + (F==2) .* ((filter2(S,F==3)>0) + (rand(M,N)<f) + 2);  % burn tree if neighbor is burning or by chance f
-    G = G + (F==3);						 % empty after burn
-    F = G;
+    image(F); pause(.1)
+    G=F;
+    for m=1:M
+        for n=1:N
+            % If bare (1)
+            if F(m,n) == 1
+                % Then grow a tree based on probability p
+                if rand < p
+                    G(m,n) = 2;
+                end
+            end
+            
+            % If tree (2)
+            if F(m,n) == 2
+                
+                % Then catch on fire based on probability f
+                if rand < f
+                    G(m,n) = 3;
+                end
+            end
+            
+            %If on fire
+            if F(m,n) == 3
+              %Set surrounding trees on fire (with boundry checks) 
+              if(m-1 > 0 && n+1 <= N && F(m-1,n+1) == 2) %NW
+                  G(m-1,n+1) = 3;
+              end
+              if(n+1 <= N && F(m,n+1) == 2) %N
+                  G(m,n+1) = 3;
+              end
+              if(m+1 <=M && n+1 <= N && F(m+1,n+1) == 2)%NE
+                  G(m+1,n+1) = 3;
+              end
+              
+              if(m-1 > 0 && F(m-1,n) == 2) %W
+                  G(m-1,n) = 3;
+              end
+              if(m+1 <= M && F(m+1,n) == 2) %E
+                  G(m+1,n) = 3;
+              end
+              
+              if(m-1 > 0 && n-1 > 0 && F(m-1,n-1) == 2) %SW
+                  G(m-1,n-1) = 3;
+              end
+              if(n-1 > 0 && F(m,n-1) == 2) %S
+                  G(m,n-1) = 3;
+              end
+              if(m+1 <=M && n-1 > 0 && F(m+1,n-1) == 2)%SE
+                 G(m+1,n-1) = 3;
+              end
+              
+              %Estinguish and go bare
+              G(m,n) = 1;
+            end
+        end
+    end
+    F=G;
 end;

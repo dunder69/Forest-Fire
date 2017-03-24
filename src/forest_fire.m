@@ -2,9 +2,9 @@
 % Original code from: http://rosettacode.org/wiki/Forest_fire#MATLAB_.2F_Octave
 % Modified by Paolo Macias
 
-function [longevity, avgBiomass] = forest_fire(f,p,N,M)
+function [fitness, longevity, avgBiomass] = forest_fire(f,p,N,M)
 
-timeStepCap = 5000;
+timeStepCap = 100;
 longevity = timeStepCap;
 biomassArray = [];
 
@@ -109,3 +109,5 @@ if isempty(biomassArray)
 else
     avgBiomass = mean(biomassArray);
 end
+
+fitness = longevity * avgBioMass;

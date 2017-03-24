@@ -2,9 +2,11 @@
 % Original code from: http://rosettacode.org/wiki/Forest_fire#MATLAB_.2F_Octave
 % Modified by Paolo Macias
 
-function forest_fire(f,p,N,M)
+function [longevity, avgBiomass] = forest_fire(f,p,N,M)
 
-timeStepCap = 50;
+timeStepCap = 5000;
+longevity = timeStepCap;
+biomassArray = [];
 
 % Set default parameters if not provided
 if nargin<4;
@@ -23,8 +25,8 @@ if nargin<1;
     f=0.01;
 end
 
-% initialize space with trees based on p;
-F = (rand(M,N) < p)+1;  % tree with probability p
+% initialize empty space
+F = ones(M,N);
 
 colormap([.5,.5,.5;0,1,0;1,0,0]);
 
@@ -90,4 +92,20 @@ for i=0:timeStepCap
         end
     end
     F=G;
+    
+    %Check if bare/ calculate biomass
+    [bare, currentBiomass] = longevityAndBiomassCheck(F);
+    
+    biomassArray = [biomassArray;currentBiomass];
+    
+    if bare
+        longevity = i;
+        break;
+    end
 end;
+
+if isempty(biomassArray)
+    avgBiomass = 0;
+else
+    avgBiomass = mean(biomassArray);
+end

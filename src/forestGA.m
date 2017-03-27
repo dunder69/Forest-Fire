@@ -1,4 +1,7 @@
-function population = forestGA(populationSize, mutationProb, mutationRange, generations)
+function population = forestGA(populationSize, mutationProb, mutationRange, generations, mode)
+
+% Mode 1 = Biomass
+% Mode 2 = Longevity
 
 %2d Array with first row being fitness values, sencond row being corresponding
 %p values
@@ -8,7 +11,7 @@ halfPopSize = (populationSize/2);
 % Calculate fitnesses for all members of population based on p value
 for i=1:populationSize
    pval = population (2,i);
-   population (1,i) = forest_fire(0.001,pval,50,50);
+   population (1,i) = forest_fire(0.001,pval,50,50,mode);
 end
 
 for i=2:generations
@@ -16,7 +19,7 @@ for i=2:generations
     %Calculate fitnesses based on p values on lower half
     for j=halfPopSize:populationSize
         pval = population (2,j);
-        population (1,j) = forest_fire(0.001,pval,250,250);
+        population (1,j) = forest_fire(0.001,pval,250,250,mode);
     end
     
     %Sort by fitness values
@@ -67,3 +70,18 @@ for i=2:generations
     
     population = temp;
 end
+
+
+%After loop calculate the last fitness vaules of the new generation and
+%sort
+
+%Calculate fitnesses based on p values on lower half
+for j=halfPopSize:populationSize
+    pval = population (2,j);
+    population (1,j) = forest_fire(0.001,pval,250,250,mode);
+end
+    
+%Sort by fitness values
+[fitness, pval] = sort(population(1,:),'descend');
+orderByFitness = population(:,pval);
+population = orderByFitness;

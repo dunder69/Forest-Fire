@@ -2,13 +2,20 @@
 % Original code from: http://rosettacode.org/wiki/Forest_fire#MATLAB_.2F_Octave
 % Modified by Paolo Macias
 
-function [fitness, longevity, avgBiomass] = forest_fire(f,p,N,M)
+% Mode 1 = Biomass
+% Mode 2 = Longevity
+
+function fitness = forest_fire(f,p,N,M,mode)
 
 timeStepCap = 100;
 longevity = timeStepCap;
 biomassArray = [];
 
 % Set default parameters if not provided
+if nargin<5;
+    mode=1;
+end
+
 if nargin<4;
     M=20;
 end
@@ -93,21 +100,30 @@ for i=0:timeStepCap
     end
     F=G;
     
-    %Check if bare/ calculate biomass
-    [bare, currentBiomass] = longevityAndBiomassCheck(F);
+    %If Biomass Mode
+    if mode == 1
+        %Check if bare/ calculate biomass
+        currentBiomass = biomassCheck(F);
     
-    biomassArray = [biomassArray;currentBiomass];
+        %Filling biomass array with percentage of trees occupied
+        biomassArray = [biomassArray;currentBiomass];
     
-    if bare
-        longevity = i;
-        break;
+    %If Longevity Mode
+    elseif mode == 2
+        bare = longevityCheck(F);
+        if bare
+            longevity = i;
+            break;
+        end
     end
 end;
 
-if isempty(biomassArray)
-    avgBiomass = 0;
-else
-    avgBiomass = mean(biomassArray);
-end
 
-fitness = longevity * avgBiomass;
+%If Biomass Mode
+if mode == 1
+    fitness = mean(biomassArray);
+%If Longevity Mode
+elseif mode == 2
+    fitness = longevity;
+end
+    

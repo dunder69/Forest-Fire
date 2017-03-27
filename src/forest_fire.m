@@ -7,7 +7,7 @@
 
 function fitness = forest_fire(f,p,N,M,mode)
 
-timeStepCap = 100;
+timeStepCap = 5000;
 longevity = timeStepCap;
 biomassArray = [];
 
@@ -111,7 +111,7 @@ for i=0:timeStepCap
     %If Longevity Mode
     elseif mode == 2
         bare = longevityCheck(F);
-        if bare
+        if bare == true
             longevity = i;
             break;
         end

@@ -11,8 +11,9 @@ halfPopSize = (populationSize/2);
 % Calculate fitnesses for all members of population based on p value
 for i=1:populationSize
    pval = population (2,i);
-   population (1,i) = forest_fire(0.001,pval,50,50,mode);
+   population (1,i) = forest_fire(0.001,pval,250,250,mode);
 end
+disp('Finished generation 1');
 
 for i=2:generations
     
@@ -69,6 +70,8 @@ for i=2:generations
     end
     
     population = temp;
+    status = ['Finished generation ',num2str(i)];
+    disp(status);
 end
 
 

@@ -17,11 +17,11 @@ if nargin<5;
 end
 
 if nargin<4;
-    M=20;
+    M=250;
 end
 
 if nargin<3;
-    N=20;
+    N=250;
 end
 
 if nargin<2;

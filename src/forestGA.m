@@ -88,3 +88,7 @@ end
 [fitness, pval] = sort(population(1,:),'descend');
 orderByFitness = population(:,pval);
 population = orderByFitness;
+
+%Write population to file
+filename = strcat('pop',num2str(populationSize),'-mp',num2str(mutationProb),'-mr',num2str(mutationRange),'-gens',num2str(generations),'-mode',num2str(mode),'.txt');
+dlmwrite(filename,population);

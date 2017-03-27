@@ -35,7 +35,7 @@ colormap([.5,.5,.5;0,1,0;1,0,0]);
 % 3 = Burning
 
 for i=0:timeStepCap
-    image(F); pause(.1)
+    %image(F); pause(.1)
     G=F;
     for m=1:M
         for n=1:N
@@ -110,4 +110,4 @@ else
     avgBiomass = mean(biomassArray);
 end
 
-fitness = longevity * avgBioMass;
+fitness = longevity * avgBiomass;

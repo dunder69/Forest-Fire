@@ -188,6 +188,8 @@ filename = strcat('2trees-pop2-pop',num2str(populationSize),'-mp',num2str(mutati
 dlmwrite(filename,populationSpecies2);
 
 % Plot stuff
+x = 1:generations;
+
 p1 = plot(x,minTree1,'-bv');
 hold on;
 p2 = plot(x,avgTree1,'-bd');

@@ -3,6 +3,9 @@ function [populationSpecies1,populationSpecies2,maxTree1,avgTree1,minTree1,maxTr
 % Mode 1 = Biomass
 % Mode 2 = Longevity
 
+M = 10;
+N = 10;
+
 %2d Array with first row being fitness values, sencond row being corresponding
 %p values
 populationSpecies1 = [zeros(1,populationSize); rand(1,populationSize)];
@@ -22,16 +25,16 @@ minTree2 = zeros(2,generations);
 for i=1:populationSize
    pval1 = populationSpecies1 (2,i);
    pval2 = populationSpecies2 (2,i);
-   [tree1Fitness, tree2Fitness] = forest_fire2trees(0.001,pval1,pval2,250,250,mode);
+   [tree1Fitness, tree2Fitness] = forest_fire2trees(0.001,pval1,pval2,M,N,mode);
    populationSpecies1 (1,i) = tree1Fitness;
    populationSpecies2 (1,i) = tree2Fitness;
 end
 % Find min, max, avg, get index of each so we can get corresponding p
 % value
-[max1 max1idx] = max(populationSpecies1 (1,:));
-[min1 min1idx] = min(populationSpecies1 (1,:));
-[max2 max2idx] = max(populationSpecies2 (1,:));
-[min2 min2idx] = min(populationSpecies2 (1,:));
+[max1, max1idx] = max(populationSpecies1 (1,:));
+[min1, min1idx] = min(populationSpecies1 (1,:));
+[max2, max2idx] = max(populationSpecies2 (1,:));
+[min2, min2idx] = min(populationSpecies2 (1,:));
 
 avgf1 = mean(populationSpecies1 (1,:)); % Avg fitness
 avgp1 = mean(populationSpecies1 (2,:)); % Avg p value
@@ -65,9 +68,9 @@ for i=2:generations
     
     %Keep upper half based on fitnes scores, calc min and max of upper half
     upperMaxTree1 = 0;
-    upperMinTre1 = 1;
+    upperMinTree1 = 1;
     upperMaxTree2 = 0;
-    upperMinTre2 = 1;
+    upperMinTree2 = 1;
     temp1 = [zeros(1,populationSize); zeros(1,populationSize)];
     temp2 = [zeros(1,populationSize); zeros(1,populationSize)];
     for j=1:halfPopSize
@@ -75,25 +78,25 @@ for i=2:generations
         temp1(2,j) = orderByFitness1 (2,j);
         temp2(1,j) = orderByFitness2 (1,j);
         temp2(2,j) = orderByFitness2 (2,j);
-        if populationSpecies1(2,j) > upperMaxTree1
+        if orderByFitness1(2,j) > upperMaxTree1
             upperMaxTree1 = orderByFitness1(2,j);
         end
-        if populationSpecies1(2,j) < upperMinTre1
-            upperMinTre1 = orderByFitness1(2,j);
+        if orderByFitness1(2,j) < upperMinTree1
+            upperMinTree1 = orderByFitness1(2,j);
         end
-        if populationSpecies2(2,j) > upperMaxTree2
-            upperMaxTree2 = orderByFitness2(2,j);
+        if orderByFitness1(2,j) > upperMaxTree2
+            upperMaxTree2 = orderByFitness1(2,j);
         end
-        if populationSpecies2(2,j) < upperMinTre2
-            upperMinTre2 = orderByFitness2(2,j);
+        if orderByFitness1(2,j) < upperMinTree2
+            upperMinTree2 = orderByFitness2(2,j);
         end
     end
     
     %Replace bottom half with random p values in the range on min and max
     %of the top half p values. These are the "children"
     for j=halfPopSize:populationSize
-        temp1(2,j) = upperMinTre1 + (upperMaxTree1-upperMinTre1).*rand(1,1);
-        temp2(2,j) = upperMinTre2 + (upperMaxTree2-upperMinTre2).*rand(1,1);
+        temp1(2,j) = upperMinTree1 + (upperMaxTree1-upperMinTree1).*rand(1,1);
+        temp2(2,j) = upperMinTree2 + (upperMaxTree2-upperMinTree2).*rand(1,1);
     end
     
     %Mutate children
@@ -133,7 +136,7 @@ for i=2:generations
     for j=halfPopSize:populationSize
         pval1 = temp1 (2,j);
         pval2 = temp2 (2,j);
-        [tree1Fitness, tree2Fitness] = forest_fire2trees(0.001,pval1,pval2,250,250,mode);
+        [tree1Fitness, tree2Fitness] = forest_fire2trees(0.001,pval1,pval2,M,N,mode);
         temp1 (1,j)  = tree1Fitness;
         temp2 (1,j)  = tree2Fitness;
     end
@@ -143,10 +146,10 @@ for i=2:generations
     populationSpecies2 = temp2;
     
     %Calc min, max, avg
-    [max1 max1idx] = max(populationSpecies1 (1,:));
-    [min1 min1idx] = min(populationSpecies1 (1,:));
-    [max2 max2idx] = max(populationSpecies2 (1,:));
-    [min2 min2idx] = min(populationSpecies2 (1,:));
+    [max1, max1idx] = max(populationSpecies1 (1,:));
+    [min1, min1idx] = min(populationSpecies1 (1,:));
+    [max2, max2idx] = max(populationSpecies2 (1,:));
+    [min2, min2idx] = min(populationSpecies2 (1,:));
 
     avgf1 = mean(populationSpecies1 (1,:)); % Avg fitness
     avgp1 = mean(populationSpecies1 (2,:)); % Avg p value
@@ -161,12 +164,12 @@ for i=2:generations
     avgTree1(1,i) = avgf1; % avg fitness
     avgTree1(2,i) = avgp1; % avg p value
     
-    maxTree2(1,1) = max2; % max fitness
-    maxTree2(2,1) = populationSpecies2(2,max2idx); % p value associated with max fitness
-    minTree2(1,1) = min2; % min fitness
-    minTree2(2,1) = populationSpecies2(2,min2idx); % p value associated with min fitness
-    avgTree2(1,1) = avgf2; % avg fitness
-    avgTree2(2,1) = avgp2; % avg p value
+    maxTree2(1,i) = max2; % max fitness
+    maxTree2(2,i) = populationSpecies2(2,max2idx); % p value associated with max fitness
+    minTree2(1,i) = min2; % min fitness
+    minTree2(2,i) = populationSpecies2(2,min2idx); % p value associated with min fitness
+    avgTree2(1,i) = avgf2; % avg fitness
+    avgTree2(2,i) = avgp2; % avg p value
     
     status = ['Finished generation ',num2str(i)];
     disp(status);
@@ -190,21 +193,23 @@ dlmwrite(filename,populationSpecies2);
 % Plot stuff
 x = 1:generations;
 
-p1 = plot(x,minTree1,'-bv');
+p1 = plot(x,minTree1(2,:),'-bv');
 hold on;
-p2 = plot(x,avgTree1,'-bd');
+p2 = plot(x,avgTree1(2,:),'-bd');
 hold on;
-p3 = plot(x,maxTree1,'-b^');
+p3 = plot(x,maxTree1(2,:),'-b^');
 hold on;
 
-p4 = plot(x,minTree2,'--mv');
+p4 = plot(x,minTree2(2,:),'--mv');
 hold on;
-p5 = plot(x,avgTree2,'--md');
+p5 = plot(x,avgTree2(2,:),'--md');
 hold on;
-p6 = plot(x,maxTree2,'--m^');
+p6 = plot(x,maxTree2(2,:),'--m^');
+hold on;
 
 title({'Plot Showing Which Growth Rate (p) Produced the'; 'Min, Avg, and Max Fitness Each Generation for 2 Species'},'FontSize', 18);
 xlabel('Generations','FontSize', 22);
 ylabel('Growth Rate (p)','FontSize', 22);
-lgd = legend([p1 p2 p3 p4 p5 p6],'Species 1 Min','Species 1 Avg','Species 1 Max','Species 2 Min','Species 2 Avg','Species 2 Max');
+lgd = legend([p1 p2 p3 p4 p5 p6],'Species 1 Min','Species 1 Avg','Species 1 Max','Species 2 Min','Species 2 Avg','Species 2 Max','Location','southeast');
 lgd.FontSize = 18;
+

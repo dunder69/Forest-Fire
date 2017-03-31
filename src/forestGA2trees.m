@@ -3,8 +3,8 @@ function [populationSpecies1,populationSpecies2,maxTree1,avgTree1,minTree1,maxTr
 % Mode 1 = Biomass
 % Mode 2 = Longevity
 
-M = 10;
-N = 10;
+M = 250;
+N = 250;
 
 %2d Array with first row being fitness values, sencond row being corresponding
 %p values
@@ -189,27 +189,3 @@ filename = strcat('2trees-pop1-pop',num2str(populationSize),'-mp',num2str(mutati
 dlmwrite(filename,populationSpecies1);
 filename = strcat('2trees-pop2-pop',num2str(populationSize),'-mp',num2str(mutationProb),'-mr',num2str(mutationRange),'-gens',num2str(generations),'-mode',num2str(mode),'.txt');
 dlmwrite(filename,populationSpecies2);
-
-% Plot stuff
-x = 1:generations;
-
-p1 = plot(x,minTree1(2,:),'-bv');
-hold on;
-p2 = plot(x,avgTree1(2,:),'-bd');
-hold on;
-p3 = plot(x,maxTree1(2,:),'-b^');
-hold on;
-
-p4 = plot(x,minTree2(2,:),'--mv');
-hold on;
-p5 = plot(x,avgTree2(2,:),'--md');
-hold on;
-p6 = plot(x,maxTree2(2,:),'--m^');
-hold on;
-
-title({'Plot Showing Which Growth Rate (p) Produced the'; 'Min, Avg, and Max Fitness Each Generation for 2 Species'},'FontSize', 18);
-xlabel('Generations','FontSize', 22);
-ylabel('Growth Rate (p)','FontSize', 22);
-lgd = legend([p1 p2 p3 p4 p5 p6],'Species 1 Min','Species 1 Avg','Species 1 Max','Species 2 Min','Species 2 Avg','Species 2 Max','Location','southeast');
-lgd.FontSize = 18;
-

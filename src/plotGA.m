@@ -1,5 +1,5 @@
 % Plot stuff
-generations = 10;
+generations = 20;
 
 x = 1:generations;
 

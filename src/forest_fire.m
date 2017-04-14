@@ -35,14 +35,14 @@ end
 % initialize empty space
 F = ones(M,N);
 
-colormap([.5,.5,.5;0,1,0;1,0,0]);
+colormap([0,0,0;0,1,0;0.937,0.451,0]);
 
 % 1 = Barren, Tree will only grow on barren spot
 % 2 = Tree 
 % 3 = Burning
 
 for i=0:timeStepCap
-    %image(F); pause(.1)
+    image(F); pause(.1)
     G=F;
     for m=1:M
         for n=1:N

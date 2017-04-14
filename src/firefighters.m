@@ -34,11 +34,12 @@ if nargin < 1;
 end
 
 
-%colormap([.5, .5, .5; 0, 1, 0; 1, 0, 0]);
+colormap([0, 0, 0; 0, 1, 0; 0.937,0.451,0;0.01,0.424,0.925]);
 
 % 1 = Barren, Tree will only grow on barren spot
 % 2 = Tree
 % 3 = Burning
+% 4 = Just Extinguished by Fire Fighter
 for j = 1:length(firefighterCount)
     firefighterCount(j)
     % initialize empty space
@@ -46,7 +47,7 @@ F = ones(M, N);
 biomassArray = [];
 
     for i = 0:timeStepCap
-        %image(F); pause(.1)
+        image(F); pause(.1)
         G = F;
         fires = [];
         for m = 1:M
@@ -63,11 +64,11 @@ biomassArray = [];
             perm = randperm(length(fires) / 2);
             for k = 1:length(perm)
                 loc = perm(k)-1;
-                G(fires(loc*2+1), fires(loc*2+2)) = 2;
+                G(fires(loc*2+1), fires(loc*2+2)) = 4;
             end
         else
             for k = 0:length(fires)/2-1
-                G(fires(k*2+1), fires(k*2+2)) = 2;
+                G(fires(k*2+1), fires(k*2+2)) = 4;
             end
         end
      
@@ -119,9 +120,18 @@ biomassArray = [];
                         if (m + 1 <= M && n - 1 > 0 && F(m + 1, n - 1) == 2) %SE
                             G(m + 1, n - 1) = 3;
                         end
-                     
-                        %Estinguish and go bare
-                        G(m, n) = 1;
+                        
+                        if G(m, n) ~= 4
+                            %Estinguish and go bare
+                            G(m, n) = 1;
+                        end
+                end
+                
+                %If previously extinguished by a fire fighter, set back to
+                %tree
+                if F(m, n) == 4
+                    
+                    G(m, n) = 2;
                 end
             end
         end

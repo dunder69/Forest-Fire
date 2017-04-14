@@ -1,7 +1,7 @@
 # CAS Project 3: Forest-Fire
 
 ## Running a single simulation of the forest fire model
-To run a single simulation of the forst fire model use the forst fire functions:
+To run a single simulation of the forst fire model use the forest fire functions:
 * forest_fire.m for one species
 * forest_fire2trees.m for 2 species
 * firefighters.m for one species with firefighters
@@ -14,7 +14,7 @@ In each the input parameters are:
 * N,M = dimensions of grid
 * mode = 1 for biomass fitness function, 2 for longevityfitness function
 
-An example call is: bioFitness = forest_fire(.01,.3,250,250,1);
+An example call is: `bioFitness = forest_fire(.01,.3,250,250,1);`
 
 Each function has the following line uncommented to graphically display the model.
 
@@ -40,4 +40,4 @@ In each the input parameters are:
 * generations
 * mode = 1 for biomass fitness function, 2 for longevityfitness function
 
-An example call is: [populationSpecies,maxTree,avgTree,minTree] = forestGA(20,.1,.1,20,1);
+An example call is: `[populationSpecies,maxTree,avgTree,minTree] = forestGA(20,.1,.1,20,1);`
